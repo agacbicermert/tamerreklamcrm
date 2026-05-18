@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabela CRM Takvimi</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="theme-dark">
+    <main class="page-shell">
+      <section class="workspace-widget" aria-label="Tabela CRM çalışma alanı">
+        <header class="workspace-header">
+          <div class="brand-block">
+            <img class="brand-logo" src="https://www.tamerreklam.com.tr/tamerreklam_logo.png" alt="Tamer Reklam Logosu" />
+            <div>
+              <h1>Haftalık iş ve müşteri planı</h1>
+            </div>
+          </div>
+
+          <div class="top-search" role="search">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10.8 18a7.2 7.2 0 1 1 5.04-2.06l3.61 3.6-1.41 1.42-3.6-3.61A7.18 7.18 0 0 1 10.8 18Zm0-2a5.2 5.2 0 1 0 0-10.4 5.2 5.2 0 0 0 0 10.4Z" />
+            </svg>
+            <input id="globalSearch" type="search" autocomplete="off" placeholder="Şirket, kontak, teklif, montaj ara..." />
+          </div>
+
+          <div class="header-actions">
+            <button class="pill-button" id="todayBtn" type="button">Bugün</button>
+            <button class="icon-button" id="prevWeekBtn" type="button" aria-label="Önceki hafta" title="Önceki hafta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15.7 5.7-1.4-1.4L6.6 12l7.7 7.7 1.4-1.4L9.4 12l6.3-6.3Z" /></svg>
+            </button>
+            <button class="icon-button" id="nextWeekBtn" type="button" aria-label="Sonraki hafta" title="Sonraki hafta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8.3 18.3 1.4 1.4 7.7-7.7-7.7-7.7-1.4 1.4 6.3 6.3-6.3 6.3Z" /></svg>
+            </button>
+            <button class="pill-button" id="themeToggle" type="button">Gündüz modu</button>
+          </div>
+        </header>
+
+        <div class="summary-row" id="summaryRow" aria-label="Özet"></div>
+
+        <div class="workspace-grid">
+          <aside class="side-stack" aria-label="Şirketler ve işler">
+            <section class="mini-widget">
+              <div class="widget-title">
+                <div>
+                  <p class="eyebrow">CRM</p>
+                  <h2>Şirketler</h2>
+                </div>
+              </div>
+              <div class="company-list" id="companyList"></div>
+            </section>
+
+            <section class="mini-widget" aria-label="Seçili şirket">
+              <div class="company-card-head">
+                <div class="avatar" id="companyAvatar">A</div>
+                <div>
+                  <h2 id="companyName">Ahmet Eczanesi</h2>
+                  <p id="companyMeta">LED tabela</p>
+                </div>
+              </div>
+              <dl class="compact-facts" id="companyFacts"></dl>
+              <div class="contact-list" id="contactList"></div>
+            </section>
+
+            <section class="mini-widget">
+              <div class="widget-title">
+                <div>
+                  <p class="eyebrow">Fırsatlar</p>
+                  <h2>Teklif ve üretim hattı</h2>
+                </div>
+              </div>
+              <div class="opportunity-list" id="opportunityList"></div>
+            </section>
+          </aside>
+
+          <section class="calendar-widget" aria-label="Haftalık takvim">
+            <div class="calendar-top">
+              <div>
+                <p class="eyebrow">Google Calendar görünümü</p>
+                <h2 id="weekTitle">18 May - 24 May</h2>
+              </div>
+              <div class="legend">
+                <span><i class="dot discovery"></i>Keşif</span>
+                <span><i class="dot design"></i>Tasarım</span>
+                <span><i class="dot production"></i>Üretim</span>
+                <span><i class="dot install"></i>Montaj</span>
+              </div>
+            </div>
+            <div class="week-head" id="weekHead"></div>
+            <div class="calendar-scroll" id="calendarScroll">
+              <div class="time-axis" id="timeAxis"></div>
+              <div class="week-grid" id="weekGrid"></div>
+            </div>
+          </section>
+
+          <aside class="editor-widget" id="editorWidget" aria-label="Takvim kaydı">
+            <div class="editor-empty" id="editorEmpty">
+              <p class="eyebrow">Slot seç</p>
+              <h2>Bir saat aralığına tıkla</h2>
+              <p>Takvime başlık, detay, şirket, kontak, potansiyel iş ve ek dosyalar buradan eklenecek.</p>
+            </div>
+
+            <form id="eventForm" class="event-form hidden">
+              <div class="widget-title">
+                <div>
+                  <p class="eyebrow">Yeni takvim kaydı</p>
+                  <h2 id="editorTitle">18 Mayıs 09:00</h2>
+                </div>
+                <button class="icon-button" id="closeEditorBtn" type="button" aria-label="Paneli kapat" title="Paneli kapat">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 12.6 12.6-1.4 1.4L5 6.4 6.4 5Zm12.6 1.4L6.4 19 5 17.6 17.6 5 19 6.4Z" /></svg>
+                </button>
+              </div>
+
+              <label>
+                Başlık
+                <input id="eventTitle" required placeholder="Örn. Eczane cephe ölçüsü" />
+              </label>
+
+              <label>
+                Detay
+                <textarea id="eventDetail" rows="4" placeholder="Ölçü, malzeme, not, renk, montaj riski..."></textarea>
+              </label>
+
+              <div class="form-grid">
+                <label>
+                  İş tipi
+                  <select id="eventType">
+                    <option value="discovery">Keşif / ölçü</option>
+                    <option value="design">Tasarım</option>
+                    <option value="offer">Teklif</option>
+                    <option value="production">Üretim</option>
+                    <option value="install">Montaj</option>
+                    <option value="collection">Tahsilat</option>
+                  </select>
+                </label>
+                <label>
+                  Ürün
+                  <select id="eventProduct">
+                    <option>LED tabela</option>
+                    <option>Cephe tabelası</option>
+                    <option>Kutu harf</option>
+                    <option>Pleksi ürün</option>
+                    <option>Ramak kala kutusu</option>
+                    <option>İç mekan tabela</option>
+                  </select>
+                </label>
+                <label>
+                  Şirket
+                  <select id="eventCompany"></select>
+                </label>
+                <label>
+                  Kontak
+                  <select id="eventContact"></select>
+                </label>
+                <label>
+                  Potansiyel iş
+                  <select id="eventOpportunity"></select>
+                </label>
+                <label>
+                  Bitiş
+                  <input id="eventEnd" type="time" required />
+                </label>
+              </div>
+
+              <label>
+                Ekler
+                <input id="eventFiles" type="file" multiple />
+              </label>
+              <div class="file-list" id="filePreview"></div>
+
+              <button class="primary-button" type="submit">Takvime ekle</button>
+            </form>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <template id="emptyStateTemplate">
+      <div class="empty-state">
+        <svg viewBox="0 0 80 80" aria-hidden="true">
+          <rect x="16" y="18" width="48" height="44" rx="8" />
+          <path d="M26 31h28M26 42h18M26 53h24" />
+        </svg>
+        <p></p>
+      </div>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
